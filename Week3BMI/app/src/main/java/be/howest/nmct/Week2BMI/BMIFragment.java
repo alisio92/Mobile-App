@@ -102,8 +102,12 @@ public class BMIFragment extends Fragment {
         Log.d("log: " + getClass().getSimpleName(), "onStop");
         SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("Height", Float.parseFloat(this.uwHeightView.getText().toString()));
-        editor.putInt("Mass", Integer.parseInt(this.uwMassView.getText().toString()));
+        Float height = 0.0f;
+        Integer mass = 0;
+        if(!this.uwHeightView.getText().toString().isEmpty()) height = Float.parseFloat(this.uwHeightView.getText().toString());
+        if(!this.uwMassView.getText().toString().isEmpty()) mass = Integer.parseInt(this.uwMassView.getText().toString());
+        editor.putFloat("Height", height);
+        editor.putInt("Mass", mass);
         editor.commit();
         super.onStop();
     }

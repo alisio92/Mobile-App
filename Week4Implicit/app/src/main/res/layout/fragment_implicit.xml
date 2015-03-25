@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="be.howest.nmct.week4implicit.ImplicitFragment">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Webbrowser NMCT.be"
+        android:id="@+id/btnBrowser" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Make Call"
+        android:id="@+id/btnCall"
+        android:layout_below="@+id/btnBrowser"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Dial Number"
+        android:id="@+id/btnDial"
+        android:layout_below="@+id/btnCall"
+        android:layout_alignEnd="@+id/btnCall" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Geolocation"
+        android:id="@+id/btnLocation"
+        android:layout_below="@+id/btnDial"
+        android:layout_alignEnd="@+id/btnDial" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Contacts"
+        android:id="@+id/btnContacts"
+        android:layout_below="@+id/btnLocation"
+        android:layout_alignEnd="@+id/btnLocation" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit first contact"
+        android:id="@+id/btnEdit"
+        android:layout_below="@+id/btnContacts"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Calculate BMI"
+        android:id="@+id/btnBmi"
+        android:layout_below="@+id/btnEdit"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
