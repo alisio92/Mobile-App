@@ -1,0 +1,58 @@
+   mainactivity
+showfragmenchange     
+/*getFragmentManager().beginTransaction()
+                .add(R.id.frag_main, ChangeFragment.newInstance(huidigeWisselkoers), "ChangeFragment")
+                .commit();*/
+        //ChangeFragment.newInstance(huidigeWisselkoers);
+
+        /*ChangeFragment newFragment = new ChangeFragment();
+        Bundle args = new Bundle();
+        args.putInt(ChangeFragment.BITCOIN_RATE, position);
+        newFragment.setArguments(args);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frag_main, newFragment);
+        transaction.commit();*/
+
+ //startActivityForResult(fragment, position);
+        //Intent intent = new Intent();
+        /*fragment.putExtra(ChangeFragment.BITCOIN_RATE, huidigeWisselkoers);
+        setResult(RESULT_OK, fragment);
+        finish();*/
+        //fragment.setExitSharedElementCallback(ChangeFragment.class);
+        //fragment.setEx
+        /*Bundle args = new Bundle();
+        args.putInt(ChangeFragment.BITCOIN_RATE, position);
+        fragment.setArguments(args);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frag_main, fragment);
+        String t = Float.toString(fragment.currentRateBitcoinInEuro);
+        transaction.commit();*/
+
+            /*fragment=ChangeFragment.newInstance(0);
+            FragmentTransaction ft=getFragmentManager().beginTransaction();
+            ft.add(fragment,"ChangeFragment");
+            Bundle args = new Bundle();
+            args.putInt(ChangeFragment.BITCOIN_RATE, position);
+            ft.commit();*/
+
+        /*Bundle args = new Bundle();
+        args.putInt(ChangeFragment.BITCOIN_RATE, position);
+        fragment.setArguments(args);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frag_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();*/
+
+onarticleselected
+        /*if (position == 0) {
+            showFragmentChange(position);
+        }
+        if (position == 1) {
+            showFragmentBitcoinRate(position);
+        }*/
+
+showfragmentbitcoinrate
+        /*getFragmentManager().beginTransaction()
+            .add(R.id.frag_main, BitcoinRateFragment.newInstance(huidigeWisselkoers), "BitcoinRateFragment")
+            .commit();
+        //BitcoinRateFragment.newInstance(huidigeWisselkoers);*/
