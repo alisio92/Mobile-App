@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="be.howest.nmct.week5BitCoin.ChangeFragment">
+
+
+    <TextView
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:text="Uw bedrag in €"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textSize="22dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtBedragEuro"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:numeric="decimal"
+        android:text="0"
+        android:paddingLeft="10dp" />
+
+    <Button
+        style="@style/CustomStyleButton"
+        android:drawableLeft="@drawable/arrow_right"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="naar Bitcoin"
+        android:id="@+id/btnONBit"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView" />
+
+    <Button
+        style="@style/CustomStyleButton"
+        android:drawableLeft="@drawable/arrow_left"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Naar Euro"
+        android:id="@+id/btnONE"
+        android:layout_below="@+id/btnONBit"
+        android:layout_toEndOf="@+id/txtBedragEuro"
+        android:layout_marginLeft="75dp" />
+
+    <TextView
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:text="Uw bedrag in bitcoin"
+        android:id="@+id/textView2"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/btnONBit" />
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="1 bitcoin = 100"
+        android:id="@+id/txbRate"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="56dp"
+        android:textSize="22dp"
+        android:layout_alignParentEnd="true"
+        android:gravity="center" />
+
+    <Button
+        style="@style/CustomStyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wijzig koers euro - bitcoin"
+        android:id="@+id/btnWijzig"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtBedragBitcoin"
+        android:numeric="decimal"
+        android:text="0"
+        android:paddingLeft="10dp"
+        android:layout_alignTop="@+id/textView7"
+        android:layout_alignStart="@+id/textView2" />
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:text="€"
+        android:id="@+id/textView7"
+        android:layout_alignTop="@+id/txtBedragEuro"
+        android:layout_toStartOf="@+id/btnONBit"
+        android:layout_alignBottom="@+id/txtBedragEuro"
+        android:gravity="center_vertical"
+        android:textSize="22dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:text="Bitcoin"
+        android:id="@+id/textView8"
+        android:layout_alignTop="@+id/txtBedragBitcoin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/txtBedragBitcoin"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:gravity="center_vertical" />
+
+</RelativeLayout>
