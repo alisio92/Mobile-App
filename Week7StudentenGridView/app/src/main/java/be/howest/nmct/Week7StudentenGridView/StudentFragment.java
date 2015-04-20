@@ -64,7 +64,8 @@ public class StudentFragment extends ListFragment implements LoaderManager.Loade
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_student, container, false);
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.fragment_student, container, false);
+        return v;
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

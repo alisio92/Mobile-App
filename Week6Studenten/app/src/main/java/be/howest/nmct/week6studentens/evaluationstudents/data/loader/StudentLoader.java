@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 
-import java.util.Objects;
-
 import be.howest.nmct.week6studentens.evaluationstudents.data.StudentAdmin;
 import be.howest.nmct.week6studentens.evaluationstudents.data.admin.Student;
 
