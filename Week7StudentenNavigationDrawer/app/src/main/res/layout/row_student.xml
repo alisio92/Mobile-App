@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imgIcon"
-        android:layout_marginTop="25dp"
         android:layout_marginLeft="15dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentEnd="true" />
@@ -32,8 +31,23 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/txtNaamStudent"
         android:layout_below="@+id/txtNaamStudent"
-        android:layout_marginTop="15dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtScore"
+        android:layout_below="@+id/txtEmailStudent"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score:"
+        android:id="@+id/textView2"
+        android:layout_alignTop="@+id/txtScore"
+        android:layout_alignStart="@+id/txtEmailStudent"
+        android:layout_toStartOf="@+id/txtScore" />
 
 </RelativeLayout>

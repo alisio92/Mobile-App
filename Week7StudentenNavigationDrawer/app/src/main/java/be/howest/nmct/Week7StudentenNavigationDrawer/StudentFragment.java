@@ -42,9 +42,16 @@ public class StudentFragment extends ListFragment implements LoaderManager.Loade
     public static final String DIPLOMAGRAAD = "be.howest.nmct.NEW_DIPLOMAGRAAD";
 
     static final String[] mColumnNames = new String[] {
-            Contract.StudentColumns.COLUMN_STUDENT_NAAM,
+            Contract.StudentColumns.COLUMN_STUDENT_VOLLEDIGE_NAAM,
             Contract.StudentColumns.COLUMN_STUDENT_EMAIL,
+            Contract.StudentColumns.COLUMN_STUDENT_TOTAAL,
     };
+
+    public StudentFragment() {
+        super();
+        // Just to be an empty Bundle. You can use this later with getArguments().set...
+        setArguments(new Bundle());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +72,7 @@ public class StudentFragment extends ListFragment implements LoaderManager.Loade
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        int[] to = new int[] { R.id.txtNaamStudent, R.id.txtEmailStudent };
+        int[] to = new int[] { R.id.txtNaamStudent, R.id.txtEmailStudent, R.id.txtScore };
         studentAdapter = new StudentAdapter(getActivity(), R.layout.row_student, null, mColumnNames, to, 0);
         this.setListAdapter(studentAdapter);
 
@@ -113,20 +120,17 @@ public class StudentFragment extends ListFragment implements LoaderManager.Loade
                   .commit();*/
 
         MatrixCursor obj = (MatrixCursor)l.getAdapter().getItem(position);
-        String email = obj.getString(3);
+        String[] colums = obj.getColumnNames();
+        Integer indexEmail = -1;
+        for(int i = 0; i< colums.length;i++){
+            if(colums[i].equals(Contract.StudentColumns.COLUMN_STUDENT_EMAIL)) indexEmail = i;
+        }
+        String email = obj.getString(indexEmail);
         mStudentCallback.onStudentSelected(email);
     }
 
     public interface OnStudentListener {
         public void onStudentSelected(String email);
-    }
-
-    public static StudentFragment newInstance(String graad){
-        StudentFragment fragment = new StudentFragment();
-        Bundle args = new Bundle();
-        //args.putString(DIPLOMAGRAAD, graad);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     public static StudentFragment newInstance(){
@@ -163,16 +167,22 @@ public class StudentFragment extends ListFragment implements LoaderManager.Loade
             ImageView icon = (ImageView)row.findViewById(R.id.imgIcon);
 
             int colnr = cursor.getColumnIndex(Contract.StudentColumns.COLUMN_STUDENT_TOTAAL);
+            int colEmail = cursor.getColumnIndex(Contract.StudentColumns.COLUMN_STUDENT_EMAIL);
+            String email = cursor.getString(colEmail);
+            Student student = StudentAdmin.getInstance().getStudent(email);
+            String graadStudent = String.valueOf(Student.DiplomaGraad.getDiplomaGraad(student.getTotaleScoreStudent()));
 
-            if(cursor.getDouble(colnr) < 8){
+            if(cursor.getDouble(colnr) < 8.0){
                 icon.setImageResource(R.drawable.student_red);
-            }else if(cursor.getDouble(colnr) < 10){
+            }else if(cursor.getDouble(colnr) < 10.0){
                 icon.setImageResource(R.drawable.student_orange);
             }else{
                 icon.setImageResource(R.drawable.student_green);
             }
-
-            return row;
+            String diplomagraad = "";
+            if(getArguments().getString(DIPLOMAGRAAD)!= null) diplomagraad = getArguments().getString(DIPLOMAGRAAD);
+            if(diplomagraad.equals("") || diplomagraad.equals(graadStudent)) return row;
+            else return new View(context);
         }
     }
 }

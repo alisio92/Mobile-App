@@ -15,7 +15,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:background="#ffffffff"
-        android:gravity="left"
+        android:layout_gravity="left"
         android:orientation="vertical"
         tools:context="be.howest.nmct.Week7StudentenNavigationDrawer.DiplomagraadFragment"
         tools:layout="@layout/row_diplomagraad"/>

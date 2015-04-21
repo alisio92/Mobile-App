@@ -1,0 +1,27 @@
+        /*@Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent){
+            final LayoutInflater inflater = LayoutInflater.from(context);
+            View row = inflater.inflate(layout, parent, false);
+            int colEmail = cursor.getColumnIndex(Contract.StudentColumns.COLUMN_STUDENT_EMAIL);
+            String email = cursor.getString(colEmail);
+            Student student = StudentAdmin.getInstance().getStudent(email);
+            String diplomagraad = getArguments().getString(DIPLOMAGRAAD);
+            String graadStudent = String.valueOf(Student.DiplomaGraad.getDiplomaGraad(student.getTotaleScoreStudent()));
+            ImageView icon = (ImageView)row.findViewById(R.id.imgIcon);
+
+            int colnr = cursor.getColumnIndex(Contract.StudentColumns.COLUMN_STUDENT_TOTAAL);
+
+            //Double d = cursor.getDouble(colnr);
+            if(cursor.getDouble(colnr) < 8){
+                icon.setImageResource(R.drawable.student_red);
+            }else if(cursor.getDouble(colnr) < 10){
+                icon.setImageResource(R.drawable.student_orange);
+            }else{
+                icon.setImageResource(R.drawable.student_green);
+            }
+
+            if(diplomagraad.equals(graadStudent)) {
+                return row;
+            }
+            else return new View(context);
+        }*/

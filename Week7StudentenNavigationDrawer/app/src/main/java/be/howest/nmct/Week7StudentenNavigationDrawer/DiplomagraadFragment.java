@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -24,7 +25,7 @@ import be.howest.nmct.Week7StudentenNavigationDrawer.evaluationstudents.data.adm
 
 public class DiplomagraadFragment extends ListFragment {
 
-    //private OnDiplomagraadListener mDiplomagraadCallback;
+    private OnDiplomagraadListener mDiplomagraadCallback;
     public static final String ARG_DIPLOMAGRAAD_NUMBER = "diploma_number";
 
     @Override
@@ -35,29 +36,28 @@ public class DiplomagraadFragment extends ListFragment {
         setListAdapter(new DiplomagraadAdapter(getActivity()));
 
         //int i = getArguments().getInt(ARG_DIPLOMAGRAAD_NUMBER);
-        String[] diplomagraden = getResources().getStringArray(R.array.diplomagraad_array);
-        String diplomagraad = diplomagraden[diplomagraden.length -1];
-        int imageId = getResources().getIdentifier(diplomagraad.toLowerCase(Locale.getDefault()),
-                "drawable", getActivity().getPackageName());
+        /*String[] diplomagraden = getResources().getStringArray(R.array.diplomagraad_array);
+        String diplomagraad = diplomagraden[diplomagraden.length -1];*/
+        //int imageId = getResources().getIdentifier(diplomagraad.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
         //((ImageView) v.findViewById(R.id.image)).setImageResource(imageId);
-        getActivity().setTitle(diplomagraad);
+        //getActivity().setTitle(diplomagraad);
 
         return v;
     }
 
-    /*public interface OnDiplomagraadListener {
-        public void onDiplomagraadSelected(Student.DiplomaGraad diplomagraad);
-    }*/
+    public interface OnDiplomagraadListener {
+        public void onDiplomagraadSelected(String diplomagraad);
+    }
 
     public static DiplomagraadFragment newInstance(int idx){
         DiplomagraadFragment fragment = new DiplomagraadFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_DIPLOMAGRAAD_NUMBER, idx);
+        //args.putInt(ARG_DIPLOMAGRAAD_NUMBER, idx);
         fragment.setArguments(args);
         return fragment;
     }
 
-    /*public void onAttach(Activity activity) {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mDiplomagraadCallback = (OnDiplomagraadListener) activity;
@@ -65,7 +65,7 @@ public class DiplomagraadFragment extends ListFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
-    }*/
+    }
 
     class ViewHolder{
         public TextView textViewDiplomagraad = null;
@@ -112,11 +112,8 @@ public class DiplomagraadFragment extends ListFragment {
 
         protected void onListItemClick(View v, Student.DiplomaGraad diplomagraad)
         {
-            /*Intent intent = new Intent();
-            intent.putExtra(MainActivity.EXTRA_HOROSCOOP, getResourceId(horoscoop));
-            setResult(MainActivity.REQUEST_HOROSCOOP, intent);
-            finish();*/
-            //mDiplomagraadCallback.onDiplomagraadSelected(diplomagraad);
+            String name = diplomagraad.getName();
+            mDiplomagraadCallback.onDiplomagraadSelected(name);
         }
     }
 }

@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="430dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/txtTitel" />
+        android:layout_below="@+id/txtTitel"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

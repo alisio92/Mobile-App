@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 import be.howest.nmct.Week7StudentenNavigationDrawer.evaluationstudents.data.StudentAdmin;
@@ -22,6 +23,7 @@ public class StudentLoader extends AsyncTaskLoader<Cursor>{
             BaseColumns._ID,
             Contract.StudentColumns.COLUMN_STUDENT_NAAM,
             Contract.StudentColumns.COLUMN_STUDENT_VOORNAAM,
+            Contract.StudentColumns.COLUMN_STUDENT_VOLLEDIGE_NAAM,
             Contract.StudentColumns.COLUMN_STUDENT_EMAIL,
             Contract.StudentColumns.COLUMN_STUDENT_TOTAAL};
 
@@ -61,8 +63,11 @@ public class StudentLoader extends AsyncTaskLoader<Cursor>{
                 row.add(id);
                 row.add(student.getNaamStudent());
                 row.add(student.getVoornaamStudent());
+                row.add(student.getNaamStudent() + " " + student.getVoornaamStudent());
                 row.add(student.getEmailStudent());
-                row.add(Math.round(student.getTotaleScoreStudent()));
+                double d = student.getTotaleScoreStudent();
+                DecimalFormat f = new DecimalFormat("##.00");
+                row.add(f.format(d));
                 id++;
             }
             mCursor = cursor;
