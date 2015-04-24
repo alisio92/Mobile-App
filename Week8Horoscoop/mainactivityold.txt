@@ -1,0 +1,82 @@
+package be.nmct.howest.week6horoscoop;
+
+import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends ListActivity {
+    private ArrayAdapter<Persoon> adapter;
+    static class Persoon{
+        public String name;
+        public int age;
+        public Persoon(String name, int age){
+            this.name = name;
+            this.age = age;
+        }
+        public String toString(){
+            return name + "(" + age + ")";
+        }
+    }
+
+    public static List<Persoon> personen = new ArrayList<Persoon>();
+    static {
+        for(int i = 0; i< 10;i++){
+            Persoon p = new Persoon("naam " + i, i);
+            personen.add(p);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new ArrayAdapter<Persoon>(this, R.layout.custom_list_item);
+        setListAdapter(adapter);
+    }
+
+    static class MyAdapter extends ArrayAdapter<Persoon>{
+
+        static class ViewHolder {
+            TextView large;
+            TextView small;
+            public ViewHolder(View view){
+                large = (TextView) view.findViewById(R.id.txtName);
+                small = (TextView) view.findViewById(R.id.txtAge);
+            }
+        }
+
+        public MyAdapter(Context context, List<Persoon> personen){
+            super(context, R.layout.custom_list_item, R.id.txtName, personen);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            View v = convertView;
+            if(v == null) {
+                LayoutInflater i = LayoutInflater.from(getContext());
+                v = i.inflate(R.layout.custom_list_item, parent, false);
+                ViewHolder vh = new ViewHolder(v);
+                v.setTag(vh);
+            }
+
+            //TextView large = (TextView)v.findViewById(R.id.txtName);
+            //TextView small = (TextView)v.findViewById(R.id.txtAge);
+            ViewHolder vh = (ViewHolder)v.getTag();
+
+            Persoon item = getItem(position);
+            vh.large.setText(item.name);
+            vh.small.setText(item.age);
+            return v;
+        }
+    }
+}
