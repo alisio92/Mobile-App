@@ -1,56 +1,72 @@
 package be.howest.nmct.project2015;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.ActionBarActivity;
+import android.location.LocationListener;
+import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, LocationListener{
 
-    private final LatLng LOCATION_BURNABY = new LatLng(49.27645, -122.917587);
-    private final LatLng LOCATION_SURRREY = new LatLng(49.187500, -122.849000);
-
-    private GoogleMap map;
+    private LocationManager locationManager;
+    public static LatLng LOCATION_Default = new LatLng(50.8246827, 3.251409599999988);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            /*getFragmentManager().beginTransaction()
-                    .add(R.id.container, new GoogleMapFragment())
-                    .commit();*/
-            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-            map.addMarker(new MarkerOptions().position(LOCATION_SURRREY).title("Find me here!"));
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, SettingsFragment.newInstance(), "settings")
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
-    public void onClick_City(View v) {
-//		CameraUpdate update = CameraUpdateFactory.newLatLng(LOCATION_BURNABY);
-        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 9);
-        map.animateCamera(update);
+    public void onSettingsSelected(String from, String to) {
+        showMap(from, to);
     }
 
-    public void onClick_Burnaby(View v) {
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 14);
-        map.animateCamera(update);
-
+    public void showMap(String from, String to){
+        GoogleMapFragment newFragment = new GoogleMapFragment();
+        Bundle args = new Bundle();
+        args.putString(GoogleMapFragment.FROM, from);
+        args.putString(GoogleMapFragment.TO, to);
+        newFragment.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    public void onClick_Surrey(View v) {
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_SURRREY, 16);
-        map.animateCamera(update);
+    @Override
+    public void onLocationChanged(Location location) {
+        LOCATION_Default = new LatLng(location.getLatitude(), location.getLongitude());
+    }
 
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude", "disable");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
     }
 }

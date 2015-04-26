@@ -1,28 +1,123 @@
 package be.howest.nmct.project2015;
 
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.ArrayList;
 
-public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
+import be.howest.nmct.project2015.data.Helper;
+import be.howest.nmct.project2015.data.DownloadTask;
 
-    MapView mMapView;
+public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback {
+
+    private static GoogleMap map;
+    ArrayList<LatLng> markerPoints;
+    public static final String FROM = "be.howest.nmct.NEW_FROM";
+    public static final String TO = "be.howest.nmct.NEW_TO";;
+    private final LatLng LOCATION_BURNABY = new LatLng(49.27645, -122.917587);
+    private final LatLng LOCATION_SURRREY = new LatLng(49.187500, -122.849000);
+    private LatLng locationFrom = null;
+    private LatLng locationTo = null;
+    private Button buttonSurrey;
+    private Button buttonBurnaby;
+    private Button buttonCity;
+
+    public static GoogleMap getMap() {
+        return map;
+    }
+
+    public static void setMap(GoogleMap gMap) {
+        map = gMap;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            String from = getArguments().getString(FROM);
+            String to = getArguments().getString(TO);
+            locationFrom = Helper.getLocationFromAddress(from, getActivity());
+            locationTo = Helper.getLocationFromAddress(to, getActivity());
+        }
+    }
+
+    public void initMap(){
+        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
+        markerPoints = new ArrayList<LatLng>();
+
+        LatLng loc = MainActivity.LOCATION_Default;
+        if(locationFrom!= null) loc = locationFrom;
+        setLocation(loc, 15);
+
+        if(map!=null) {
+            mapSettings();
+            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    setLocation(MainActivity.LOCATION_Default, 15);
+                    return true;
+                }
+            });
+
+            setMarker(locationFrom);
+            setMarker(locationTo);
+
+            map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                @Override
+                public void onMapClick(LatLng point) {
+                    setMarker(point);
+                }
+            });
+        }
+    }
+
+    public void setLocation(LatLng location, Integer z){
+        CameraUpdate center = CameraUpdateFactory.newLatLng(location);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(z);
+        map.moveCamera(center);
+        map.animateCamera(zoom);
+    }
+
+    public void mapSettings(){
+        map.setMyLocationEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setCompassEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.getUiSettings().setIndoorLevelPickerEnabled(true);
+    }
+
+    public void setMarker(LatLng point){
+        if (markerPoints.size() > 1) {
+            markerPoints.clear();
+            map.clear();
+        }
+        markerPoints.add(point);
+        MarkerOptions options = new MarkerOptions();
+        options.position(point);
+        if (markerPoints.size() == 1) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        } else if (markerPoints.size() == 2) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
+        map.addMarker(options);
+        if (markerPoints.size() >= 2) {
+            LatLng origin = markerPoints.get(0);
+            LatLng dest = markerPoints.get(1);
+            String url = Helper.getDirectionsUrl(origin, dest);
+            DownloadTask downloadTask = new DownloadTask();
+            downloadTask.execute(url);
         }
     }
 
@@ -32,53 +127,52 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_google_map, container, false);
 
-        mMapView = (MapView) v.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+        initVariables(v);
+        this.buttonSurrey.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showSatelite(v);
+            }
+        });
+        this.buttonBurnaby.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showTerrain(v);
+            }
+        });
+        this.buttonCity.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showNormal(v);
+            }
+        });
 
-        mMapView.onResume();// needed to get the map to display immediately
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        initMap();
         return v;
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        LatLng sydney = new LatLng(-33.867, 151.206);
-
-        map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-        map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
+    public void initVariables(View v) {
+        this.buttonSurrey = (Button) v.findViewById(R.id.btnSurrey);
+        this.buttonBurnaby = (Button) v.findViewById(R.id.btnBurnaby);
+        this.buttonCity = (Button) v.findViewById(R.id.btnCity);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
+    public void showSatelite(View v) {
+        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 9);
+        map.animateCamera(update);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
+    public void showTerrain(View v) {
+        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 14);
+        map.animateCamera(update);
+
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
+    public void showNormal(View v) {
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_SURRREY, 16);
+        map.animateCamera(update);
     }
 }
