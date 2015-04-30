@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="be.howest.nmct.Week7StudentenGridView.StudentDetailsFragment">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:id="@+id/txbName" />
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/grdPunten"
+        android:layout_width="match_parent"
+        android:layout_height="370dp"
+        android:columnWidth="90dp"
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:layout_below="@+id/txbName"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:id="@+id/txbScore"
+        android:layout_above="@+id/txbDiplomagraad"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:id="@+id/txbDiplomagraad"
+        android:layout_above="@+id/btnDetailVorige"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Vorige"
+        android:id="@+id/btnDetailVorige"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
