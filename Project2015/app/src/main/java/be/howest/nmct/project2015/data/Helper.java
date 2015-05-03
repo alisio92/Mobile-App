@@ -27,18 +27,20 @@ public class Helper {
             p1 = new LatLng(location.getLatitude(), location.getLongitude() );
 
         } catch (Exception ex) {
-
-            ex.printStackTrace();
         }
-
         return p1;
     }
 
-    public static String getDirectionsUrl(LatLng origin,LatLng dest){
+    public static String getDirectionsUrl(LatLng origin,LatLng dest, String modes, String avoids){
+        //driving walking bicycling transit
+        //avoid=tolls avoid=highways avoid=ferries
         String str_origin = "origin="+origin.latitude+","+origin.longitude;
         String str_dest = "destination="+dest.latitude+","+dest.longitude;
         String sensor = "sensor=false";
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String mode = "mode=" + modes;
+        String avoid = avoids;
+        //String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = str_origin+"&"+str_dest+"&"+sensor+"&"+mode+"&"+avoid;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
         return url;

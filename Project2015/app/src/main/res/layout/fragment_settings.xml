@@ -3,13 +3,11 @@
     android:layout_height="match_parent"
     tools:context="be.howest.nmct.project2015.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="Selecteer route"
-        android:id="@+id/textView"
+        android:id="@+id/txbRoute"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -21,40 +19,59 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="From:"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textView"
+        android:text="Van:"
+        android:id="@+id/txbFrom"
+        android:layout_below="@+id/txbRoute"
         android:layout_alignParentStart="true"
         android:textSize="18dp"
         android:layout_marginLeft="5dp"
-        android:gravity="center" />
+        android:textStyle="bold"
+        android:gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imgIconFrom"
+        android:layout_below="@+id/txbRoute"
+        android:layout_alignEnd="@+id/txbRoute"
+        android:layout_marginRight="5dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtFrom"
+        android:layout_alignBottom="@+id/txbFrom"
+        android:layout_toEndOf="@+id/txbFrom"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="To:"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/textView2"
+        android:text="Naar:"
+        android:id="@+id/txbTo"
+        android:layout_below="@+id/txbFrom"
         android:layout_alignParentStart="true"
-        android:textSize="18dp"
         android:layout_marginLeft="5dp"
-        android:gravity="center" />
+        android:gravity="center_vertical"
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:layout_width="wrap_content"
+    <ImageView
+        android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/txtFrom"
-        android:layout_below="@+id/textView"
+        android:id="@+id/imgIconTo"
+        android:layout_below="@+id/imgIconFrom"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView2" />
+        android:layout_marginRight="5dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtTo"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/txtFrom" />
+        android:layout_alignBottom="@+id/txbTo"
+        android:layout_alignStart="@+id/txtFrom"
+        android:layout_alignEnd="@+id/txtFrom" />
 
     <Button
         android:layout_width="wrap_content"
@@ -64,5 +81,92 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vervoer type"
+        android:id="@+id/txbType"
+        android:layout_below="@+id/txbTo"
+        android:layout_alignStart="@+id/txbTo"
+        android:layout_alignEnd="@+id/imgIconTo"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/txbType"
+        android:layout_alignParentStart="true"
+        android:id="@+id/rdbGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Auto"
+            android:id="@+id/rdbAuto"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Openbaar vervoer"
+            android:id="@+id/rdbOpenbaar"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fiets"
+            android:id="@+id/rdbFiets"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Te voet"
+            android:id="@+id/rdbTevoet"
+            android:checked="false" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vermeid"
+        android:id="@+id/txbVermeid"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/rdbGroup"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Toll"
+        android:id="@+id/chbToll"
+        android:layout_below="@+id/txbVermeid"
+        android:layout_alignParentStart="true"
+        android:checked="false" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Snelwegen"
+        android:id="@+id/chbSnelwegen"
+        android:layout_below="@+id/chbToll"
+        android:layout_alignParentStart="true"
+        android:checked="false" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Boten"
+        android:id="@+id/chbBoten"
+        android:layout_below="@+id/chbSnelwegen"
+        android:layout_alignParentStart="true"
+        android:checked="false" />
 
 </RelativeLayout>

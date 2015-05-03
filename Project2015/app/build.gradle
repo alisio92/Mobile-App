@@ -13,8 +13,8 @@ android {
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "be.howest.nmct.project2015"
-        minSdkVersion 14
-        targetSdkVersion 21
+        minSdkVersion 17
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }

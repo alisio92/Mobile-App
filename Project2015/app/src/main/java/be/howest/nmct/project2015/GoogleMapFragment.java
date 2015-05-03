@@ -23,11 +23,13 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
     private static GoogleMap map;
     ArrayList<LatLng> markerPoints;
     public static final String FROM = "be.howest.nmct.NEW_FROM";
-    public static final String TO = "be.howest.nmct.NEW_TO";;
-    private final LatLng LOCATION_BURNABY = new LatLng(49.27645, -122.917587);
-    private final LatLng LOCATION_SURRREY = new LatLng(49.187500, -122.849000);
+    public static final String TO = "be.howest.nmct.NEW_TO";
+    public static final String TRANSITMODE = "be.howest.nmct.NEW_TRANSITMODE";;
+    public static final String AVOID = "be.howest.nmct.NEW_AVOID";;
     private LatLng locationFrom = null;
     private LatLng locationTo = null;
+    private String trannsitMode = "";
+    private String avoid = "";
     private Button buttonSurrey;
     private Button buttonBurnaby;
     private Button buttonCity;
@@ -46,6 +48,8 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         if (getArguments() != null) {
             String from = getArguments().getString(FROM);
             String to = getArguments().getString(TO);
+            trannsitMode = getArguments().getString(TRANSITMODE);
+            avoid = getArguments().getString(avoid);
             locationFrom = Helper.getLocationFromAddress(from, getActivity());
             locationTo = Helper.getLocationFromAddress(to, getActivity());
         }
@@ -96,6 +100,7 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setIndoorLevelPickerEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(true);
     }
 
     public void setMarker(LatLng point){
@@ -115,7 +120,9 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         if (markerPoints.size() >= 2) {
             LatLng origin = markerPoints.get(0);
             LatLng dest = markerPoints.get(1);
-            String url = Helper.getDirectionsUrl(origin, dest);
+            //driving walking bicycling transit
+            //avoid=tolls avoid=highways avoid=ferries
+            String url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
             DownloadTask downloadTask = new DownloadTask();
             downloadTask.execute(url);
         }
@@ -159,20 +166,20 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
 
     public void showSatelite(View v) {
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 9);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 9);
         map.animateCamera(update);
     }
 
     public void showTerrain(View v) {
         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_BURNABY, 14);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 14);
         map.animateCamera(update);
 
     }
 
     public void showNormal(View v) {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOCATION_SURRREY, 16);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 16);
         map.animateCamera(update);
     }
 }

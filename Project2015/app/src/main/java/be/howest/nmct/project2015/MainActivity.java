@@ -34,15 +34,17 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
         }
     }
 
-    public void onSettingsSelected(String from, String to) {
-        showMap(from, to);
+    public void onSettingsSelected(String from, String to, String modes, String avoid) {
+        showMap(from, to, modes, avoid);
     }
 
-    public void showMap(String from, String to){
+    public void showMap(String from, String to, String modes, String avoid){
         GoogleMapFragment newFragment = new GoogleMapFragment();
         Bundle args = new Bundle();
         args.putString(GoogleMapFragment.FROM, from);
         args.putString(GoogleMapFragment.TO, to);
+        args.putString(GoogleMapFragment.TRANSITMODE, modes);
+        args.putString(GoogleMapFragment.AVOID, avoid);
         newFragment.setArguments(args);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, newFragment);
