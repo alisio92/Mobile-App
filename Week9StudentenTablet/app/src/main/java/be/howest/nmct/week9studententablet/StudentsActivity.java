@@ -44,7 +44,7 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
     private String email = "";
 
     private StudentFragment studentFragment;
-    private StudentDetailsFragment studentDetailsFragment;
+    private DiplomagraadFragment diplomagraadFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
 
         if(isTablet(this)){
             studentFragment = (StudentFragment) getFragmentManager().findFragmentById(R.id.student);
-            studentDetailsFragment = (StudentDetailsFragment) getFragmentManager().findFragmentById(R.id.studentDetail);
+            diplomagraadFragment = (DiplomagraadFragment) getFragmentManager().findFragmentById(R.id.graad);
         }else{
             getFragmentManager().beginTransaction()
                     .add(R.id.drawer,DiplomagraadFragment.newInstance(1))
@@ -68,40 +68,42 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
                     .commit();
         }
 
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mFrag = findViewById(R.id.drawer);
+        if(!isTablet(this)){
+            mTitle = mDrawerTitle = getTitle();
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            mFrag = findViewById(R.id.drawer);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
 
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this,                  /* host Activity */
+                    mDrawerLayout,         /* DrawerLayout object */
                 /*R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+                    R.string.drawer_open,  /* "open drawer" description for accessibility */
+                    R.string.drawer_close  /* "close drawer" description for accessibility */
+            ) {
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    getSupportActionBar().setTitle(mTitle);
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
 
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    getSupportActionBar().setTitle(mDrawerTitle);
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
+            };
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+        }
     }
 
     public static boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= 1.0;//Configuration.SCREENLAYOUT_SIZE_LARGE;
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     @Override
@@ -114,8 +116,10 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mFrag);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        if(!isTablet(this)) {
+            boolean drawerOpen = mDrawerLayout.isDrawerOpen(mFrag);
+            menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -130,21 +134,21 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        if(!isTablet(this)) getSupportActionBar().setTitle(mTitle);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        if(!isTablet(this)) mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        if(!isTablet(this)) mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     public void showStudent(String sort){
@@ -187,7 +191,7 @@ public class StudentsActivity extends ActionBarActivity implements StudentFragme
         if(sort!= "") args.putString(StudentFragment.DIPLOMAGRAAD, sort);
         fragment.setArguments(args);
         transaction.commit();
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
+        if(!isTablet(this)) mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void showStudentDetail(String email){
