@@ -1,27 +1,27 @@
 package be.howest.nmct.Week7StudentenNavigationDrawer;
 
 
-import android.app.Activity;
-import android.app.ListFragment;
-import android.app.LoaderManager;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.app.Activity;
+        import android.app.ListFragment;
+        import android.app.LoaderManager;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.database.Cursor;
+        import android.os.Bundle;
+        import android.app.Fragment;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.ImageView;
+        import android.widget.ListView;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import java.util.Locale;
+        import java.util.Locale;
 
-import be.howest.nmct.Week7StudentenNavigationDrawer.evaluationstudents.data.admin.Student;
+        import be.howest.nmct.Week7StudentenNavigationDrawer.evaluationstudents.data.admin.Student;
 
 public class DiplomagraadFragment extends ListFragment {
 
