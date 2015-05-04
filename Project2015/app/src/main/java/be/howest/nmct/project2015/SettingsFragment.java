@@ -13,9 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -52,6 +50,8 @@ public class SettingsFragment extends Fragment {
         initVariables(v);
         listenerVariables(v);
         enableDisableControls();
+        uwIconFromView.setImageResource(R.drawable.blue);
+        uwIconToView.setImageResource(R.drawable.blue);
         return v;
     }
 
@@ -100,6 +100,12 @@ public class SettingsFragment extends Fragment {
                 mSettingsCallback.onSettingsSelected(from, to, mode, avoid);
             }
         });
+        this.uwMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                enableDisableControls();
+            }
+        });
         this.uwFromView.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -107,9 +113,13 @@ public class SettingsFragment extends Fragment {
                                       int count) {
                 // TODO Auto-generated method stub
                 String from = uwFromView.getText().toString();
-                latLngFrom = Helper.getLocationFromAddress(from, getActivity());
-                if(latLngFrom == null) uwIconFromView.setImageResource(R.drawable.red);
-                else uwIconFromView.setImageResource(R.drawable.green);
+                if(from.length() > 2) {
+                    latLngFrom = Helper.getLocationFromAddress(from, getActivity());
+                    if(latLngFrom == null) uwIconFromView.setImageResource(R.drawable.blue);
+                    else uwIconFromView.setImageResource(R.drawable.green);
+                }else{
+                    uwIconFromView.setImageResource(R.drawable.blue);
+                }
                 enableDisableControls();
             }
 
@@ -124,16 +134,20 @@ public class SettingsFragment extends Fragment {
                 // TODO Auto-generated method stub
             }
         });
-        uwToView.addTextChangedListener(new TextWatcher() {
+        this.uwToView.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 // TODO Auto-generated method stub
                 String to = uwToView.getText().toString();
-                latLngTo = Helper.getLocationFromAddress(to, getActivity());
-                if(latLngTo == null) uwIconToView.setImageResource(R.drawable.red);
-                else uwIconToView.setImageResource(R.drawable.green);
+                if(to.length() > 2) {
+                    latLngTo = Helper.getLocationFromAddress(to, getActivity());
+                    if(latLngTo == null) uwIconToView.setImageResource(R.drawable.blue);
+                    else uwIconToView.setImageResource(R.drawable.green);
+                }else{
+                    uwIconToView.setImageResource(R.drawable.blue);
+                }
                 enableDisableControls();
             }
 
@@ -151,8 +165,15 @@ public class SettingsFragment extends Fragment {
     }
 
     public void enableDisableControls(){
-        if(latLngTo == null || latLngFrom == null) buttonRoutebeschrijving.setEnabled(false);
-        else buttonRoutebeschrijving.setEnabled(true);
+        if(latLngTo != null && latLngFrom != null){
+            int buttonId = uwMode.getCheckedRadioButtonId();
+            View radioButton = uwMode.findViewById(buttonId);
+            int id = uwMode.indexOfChild(radioButton);
+            if(latLngTo.toString().length() > 2 && latLngFrom.toString().length() > 2 && id >= 0) buttonRoutebeschrijving.setEnabled(true);
+            else buttonRoutebeschrijving.setEnabled(false);
+        }else{
+            buttonRoutebeschrijving.setEnabled(false);
+        }
     }
 
     public interface OnSettingsListener {
