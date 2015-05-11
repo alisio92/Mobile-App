@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -15,8 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.howest.nmct.project2015.GoogleMapFragment;
+import be.howest.nmct.project2015.R;
 
 public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
+
+    private GoogleMap map;
+
+    public GoogleMap getMap() {
+        return map;
+    }
+
+    public ParserTask(GoogleMap map){
+        this.map = map;
+    }
 
     @Override
     protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
@@ -58,14 +70,12 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
             }
 
             lineOptions.addAll(points);
-            lineOptions.width(2);
+            lineOptions.width(5);
             lineOptions.color(Color.RED);
         }
-        GoogleMap map = GoogleMapFragment.getMap();
         if(map!= null){
             try{
                 map.addPolyline(lineOptions);
-                GoogleMapFragment.setMap(map);
             }catch(Exception e){
 
             }

@@ -99,6 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txbType"
         android:layout_alignParentStart="true"
+        android:checkedButton="@+id/rdbAuto"
         android:id="@+id/rdbGroup">
 
         <RadioButton

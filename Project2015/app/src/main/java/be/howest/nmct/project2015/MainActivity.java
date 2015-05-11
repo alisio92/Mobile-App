@@ -1,19 +1,18 @@
 package be.howest.nmct.project2015;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.location.LocationListener;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +20,9 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, MapOptionsFragment.OnMapOptionsListener, LocationListener{
+import be.howest.nmct.project2015.data.MapOptie;
+
+public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, MapOptionsFragment.OnMapOptionsListener, LocationListener {
 
     private LocationManager locationManager;
     public static LatLng LOCATION_Default = new LatLng(50.8246827, 3.251409599999988);
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private View mFrag;
+    private String mapOptie = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +57,27 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     }
 
     public void onMapOptionsSelected(String optie) {
-        String o = optie;
+        GoogleMapFragment fragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentByTag("googlemap");
+        mapOptie = optie;
+        if (fragment != null) {
+            if (optie == MapOptie.Optie.NORMAL.getName()) fragment.showNormal();
+            if (optie == MapOptie.Optie.SATELLITE.getName()) fragment.showSatelite();
+            if (optie == MapOptie.Optie.TERRAIN.getName()) fragment.showTerrain();
+        }
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public void showMap(String from, String to, String modes, String avoid){
+    public void showMap(String from, String to, String modes, String avoid) {
         GoogleMapFragment newFragment = new GoogleMapFragment();
         Bundle args = new Bundle();
         args.putString(GoogleMapFragment.FROM, from);
         args.putString(GoogleMapFragment.TO, to);
         args.putString(GoogleMapFragment.TRANSITMODE, modes);
         args.putString(GoogleMapFragment.AVOID, avoid);
+        args.putString(GoogleMapFragment.MODE, mapOptie);
         newFragment.setArguments(args);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, newFragment);
+        transaction.replace(R.id.container, newFragment, "googlemap");
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -92,7 +102,7 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
         Log.d("Latitude", "status");
     }
 
-    public void setDrawer(){
+    public void setDrawer() {
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -134,7 +144,7 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mFrag);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -165,4 +175,16 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+    /*@Override
+    public void onBackPressed() {
+        MapOptionsFragment fragment = (MapOptionsFragment) getSupportFragmentManager().findFragmentByTag("googlemap");
+        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.remove(fragment);
+            trans.commit();
+            manager.popBackStack();
+        }w
+    }*/
 }

@@ -17,27 +17,22 @@ import java.util.ArrayList;
 
 import be.howest.nmct.project2015.data.Helper;
 import be.howest.nmct.project2015.data.DownloadTask;
+import be.howest.nmct.project2015.data.MapOptie;
 
 public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback {
 
-    private static GoogleMap map;
+    private GoogleMap map;
     ArrayList<LatLng> markerPoints;
     public static final String FROM = "be.howest.nmct.NEW_FROM";
     public static final String TO = "be.howest.nmct.NEW_TO";
     public static final String TRANSITMODE = "be.howest.nmct.NEW_TRANSITMODE";;
     public static final String AVOID = "be.howest.nmct.NEW_AVOID";;
+    public static final String MODE = "be.howest.nmct.NEW_MODE";;
     private LatLng locationFrom = null;
     private LatLng locationTo = null;
     private String trannsitMode = "";
     private String avoid = "";
-
-    public static GoogleMap getMap() {
-        return map;
-    }
-
-    public static void setMap(GoogleMap gMap) {
-        map = gMap;
-    }
+    private String mode = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +40,7 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         if (getArguments() != null) {
             String from = getArguments().getString(FROM);
             String to = getArguments().getString(TO);
+            mode = getArguments().getString(MODE);
             trannsitMode = getArguments().getString(TRANSITMODE);
             avoid = getArguments().getString(avoid);
             locationFrom = Helper.getLocationFromAddress(from, getActivity());
@@ -120,7 +116,8 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
             //driving walking bicycling transit
             //avoid=tolls avoid=highways avoid=ferries
             String url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
-            DownloadTask downloadTask = new DownloadTask();
+            DownloadTask downloadTask = new DownloadTask(map);
+            map = downloadTask.getMap();
             downloadTask.execute(url);
         }
     }
@@ -131,25 +128,31 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_google_map, container, false);
         initMap();
+        if(mode == MapOptie.Optie.NORMAL.getName()) showNormal();
+        if(mode == MapOptie.Optie.SATELLITE.getName()) showSatelite();
+        if(mode == MapOptie.Optie.TERRAIN.getName()) showTerrain();
         return v;
     }
 
-    public void showSatelite(View v) {
+    public void showSatelite() {
+        LatLng latLng = map.getCameraPosition().target;
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 9);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, map.getCameraPosition().zoom);
         map.animateCamera(update);
     }
 
-    public void showTerrain(View v) {
+    public void showTerrain() {
+        LatLng latLng = map.getCameraPosition().target;
         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 14);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, map.getCameraPosition().zoom);
         map.animateCamera(update);
 
     }
 
-    public void showNormal(View v) {
+    public void showNormal() {
+        LatLng latLng = map.getCameraPosition().target;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(locationFrom, 16);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, map.getCameraPosition().zoom);
         map.animateCamera(update);
     }
 }

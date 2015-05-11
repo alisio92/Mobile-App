@@ -1,9 +1,2 @@
--menu bar
-*settings
-*map
-*stappen
-
--kaart opties
--search bij kaart
--stappenplan
--lijn dikker zetten van route
+bugs
+crash by restarten map fragment

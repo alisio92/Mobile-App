@@ -3,6 +3,8 @@ package be.howest.nmct.project2015.data;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +13,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadTask extends AsyncTask<String, Void, String> {
+
+    private GoogleMap map;
+
+    public GoogleMap getMap() {
+        return map;
+    }
+
+    public DownloadTask(GoogleMap map){
+        this.map = map;
+    }
 
     @Override
     protected String doInBackground(String... url) {
@@ -26,7 +38,8 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        ParserTask parserTask = new ParserTask();
+        ParserTask parserTask = new ParserTask(map);
+        map = parserTask.getMap();
         parserTask.execute(result);
     }
 

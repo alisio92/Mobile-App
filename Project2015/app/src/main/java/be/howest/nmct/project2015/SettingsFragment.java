@@ -2,8 +2,8 @@ package be.howest.nmct.project2015;
 
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -38,7 +38,8 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-
+            if(savedInstanceState!=null) {
+            }
         }
     }
 
@@ -141,11 +142,11 @@ public class SettingsFragment extends Fragment {
                                       int count) {
                 // TODO Auto-generated method stub
                 String to = uwToView.getText().toString();
-                if(to.length() > 2) {
+                if (to.length() > 2) {
                     latLngTo = Helper.getLocationFromAddress(to, getActivity());
-                    if(latLngTo == null) uwIconToView.setImageResource(R.drawable.blue);
+                    if (latLngTo == null) uwIconToView.setImageResource(R.drawable.blue);
                     else uwIconToView.setImageResource(R.drawable.green);
-                }else{
+                } else {
                     uwIconToView.setImageResource(R.drawable.blue);
                 }
                 enableDisableControls();
