@@ -1,10 +1,10 @@
 package be.howest.nmct.project2015;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,10 +17,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.app.FragmentTransaction;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import be.howest.nmct.project2015.data.MapOptie;
+import be.howest.nmct.project2015.data.helper.MapOptie;
+import be.howest.nmct.project2015.data.loader.MapLoader;
 
 public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, MapOptionsFragment.OnMapOptionsListener, LocationListener {
 
@@ -46,18 +48,18 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
             getFragmentManager().beginTransaction()
                     .add(R.id.drawer, MapOptionsFragment.newInstance())
                     .add(R.id.container, SettingsFragment.newInstance(), "settings")
-                    .addToBackStack(null)
                     .commit();
         }
         setDrawer();
     }
 
     public void onSettingsSelected(String from, String to, String modes, String avoid) {
-        showMap(from, to, modes, avoid);
+        if(from!= null) showMap(from, to, modes, avoid);
+        else showDetail();
     }
 
     public void onMapOptionsSelected(String optie) {
-        GoogleMapFragment fragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentByTag("googlemap");
+        GoogleMapFragment fragment = (GoogleMapFragment) getFragmentManager().findFragmentByTag("googlemap");
         mapOptie = optie;
         if (fragment != null) {
             if (optie == MapOptie.Optie.NORMAL.getName()) fragment.showNormal();
@@ -67,17 +69,23 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
         mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
+    public void showSettings() {
+        SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentByTag("settings");
+        getFragmentManager().popBackStack();
+    }
+
     public void showMap(String from, String to, String modes, String avoid) {
-        GoogleMapFragment newFragment = new GoogleMapFragment();
-        Bundle args = new Bundle();
-        args.putString(GoogleMapFragment.FROM, from);
-        args.putString(GoogleMapFragment.TO, to);
-        args.putString(GoogleMapFragment.TRANSITMODE, modes);
-        args.putString(GoogleMapFragment.AVOID, avoid);
-        args.putString(GoogleMapFragment.MODE, mapOptie);
-        newFragment.setArguments(args);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        GoogleMapFragment newFragment = GoogleMapFragment.newInstance(from, to, modes, avoid, mapOptie);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.container, newFragment, "googlemap");
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void showDetail(){
+        DetailFragment newFragment = DetailFragment.newInstance();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, newFragment, "detail");
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -176,15 +184,10 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /*@Override
+    @Override
     public void onBackPressed() {
-        MapOptionsFragment fragment = (MapOptionsFragment) getSupportFragmentManager().findFragmentByTag("googlemap");
-        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction trans = manager.beginTransaction();
-            trans.remove(fragment);
-            trans.commit();
-            manager.popBackStack();
-        }w
-    }*/
+        SettingsFragment frag = (SettingsFragment) getFragmentManager().findFragmentByTag("settings");
+        frag.enableDisableControls();
+        showSettings();
+    }
 }

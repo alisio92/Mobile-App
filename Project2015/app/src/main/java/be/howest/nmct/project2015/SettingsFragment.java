@@ -4,6 +4,7 @@ package be.howest.nmct.project2015;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,7 +18,8 @@ import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import be.howest.nmct.project2015.data.Helper;
+import be.howest.nmct.project2015.data.helper.Helper;
+import be.howest.nmct.project2015.data.json.DirectionsJSONParser;
 
 public class SettingsFragment extends Fragment {
 
@@ -31,6 +33,7 @@ public class SettingsFragment extends Fragment {
     private CheckBox uwSnelwegen;
     private CheckBox uwBoten;
     private Button buttonRoutebeschrijving;
+    private Button buttonDetail;
     private LatLng latLngFrom;
     private LatLng latLngTo;
 
@@ -73,6 +76,7 @@ public class SettingsFragment extends Fragment {
         this.uwSnelwegen = (CheckBox) v.findViewById(R.id.chbSnelwegen);
         this.uwBoten = (CheckBox) v.findViewById(R.id.chbBoten);
         this.buttonRoutebeschrijving = (Button) v.findViewById(R.id.btnRoutebeschrijving);
+        this.buttonDetail = (Button) v.findViewById(R.id.btnDetail);
     }
 
     public void listenerVariables(View v){
@@ -99,6 +103,12 @@ public class SettingsFragment extends Fragment {
                 if(uwBoten.isChecked()) avoid += "&avoid=ferries";
 
                 mSettingsCallback.onSettingsSelected(from, to, mode, avoid);
+            }
+        });
+        this.buttonDetail.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                mSettingsCallback.onSettingsSelected(null, null, null, null);
             }
         });
         this.uwMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -175,6 +185,9 @@ public class SettingsFragment extends Fragment {
         }else{
             buttonRoutebeschrijving.setEnabled(false);
         }
+
+        if(DirectionsJSONParser.getPolylines()!= null) buttonDetail.setEnabled(true);
+        else buttonDetail.setEnabled(false);
     }
 
     public interface OnSettingsListener {

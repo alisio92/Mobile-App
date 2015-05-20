@@ -1,4 +1,4 @@
-package be.howest.nmct.project2015.data;
+package be.howest.nmct.project2015.data.json;
 
 import android.os.AsyncTask;
 import android.util.Log;

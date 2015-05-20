@@ -1,4 +1,4 @@
-package be.howest.nmct.project2015.data;
+package be.howest.nmct.project2015.data.helper;
 
 /**
  * Created by alisio on 4/05/2015.

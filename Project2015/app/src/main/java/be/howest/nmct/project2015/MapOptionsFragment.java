@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import be.howest.nmct.project2015.data.MapOptie;
+import be.howest.nmct.project2015.data.helper.MapOptie;
 
 
 /**

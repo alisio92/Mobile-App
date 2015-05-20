@@ -1,10 +1,9 @@
-package be.howest.nmct.project2015.data;
+package be.howest.nmct.project2015.data.json;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -15,8 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import be.howest.nmct.project2015.GoogleMapFragment;
-import be.howest.nmct.project2015.R;
+import be.howest.nmct.project2015.data.json.DirectionsJSONParser;
 
 public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
 

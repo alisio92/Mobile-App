@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="Afstand:"
+        android:id="@+id/txbDistance"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tijd:"
+        android:id="@+id/txbTime"
+        android:layout_below="@+id/txbDistance"
+        android:layout_alignParentStart="true"
+        android:textSize="18dp"
+        android:layout_alignEnd="@+id/txbDistance"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtRowDistance"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/txbDistance"
+        android:layout_toEndOf="@+id/txbDistance"
+        android:textSize="18dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtRowDuration"
+        android:layout_alignEnd="@+id/txtRowDistance"
+        android:layout_alignTop="@+id/txbTime"
+        android:layout_alignStart="@+id/txtRowDistance"
+        android:textSize="18dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtHTML"
+        android:layout_below="@+id/txbTime"
+        android:layout_alignParentStart="true"
+        android:textSize="18dp"
+        android:layout_alignEnd="@+id/txtRowDuration"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="10dp" />
+</RelativeLayout>

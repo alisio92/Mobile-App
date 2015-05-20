@@ -1,11 +1,12 @@
 package be.howest.nmct.project2015;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,14 +15,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
+import be.howest.nmct.project2015.data.json.DirectionsJSONParser;
+import be.howest.nmct.project2015.data.helper.Helper;
+import be.howest.nmct.project2015.data.helper.MapOptie;
+import be.howest.nmct.project2015.data.json.DownloadTask;
+import be.howest.nmct.project2015.data.loader.MapLoader;
 
-import be.howest.nmct.project2015.data.Helper;
-import be.howest.nmct.project2015.data.DownloadTask;
-import be.howest.nmct.project2015.data.MapOptie;
-
-public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback {
+public class GoogleMapFragment extends Fragment {
 
     private GoogleMap map;
+    private MapLoader loader;
     ArrayList<LatLng> markerPoints;
     public static final String FROM = "be.howest.nmct.NEW_FROM";
     public static final String TO = "be.howest.nmct.NEW_TO";
@@ -33,6 +36,7 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
     private String trannsitMode = "";
     private String avoid = "";
     private String mode = "";
+    private String url;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
             String to = getArguments().getString(TO);
             mode = getArguments().getString(MODE);
             trannsitMode = getArguments().getString(TRANSITMODE);
-            avoid = getArguments().getString(avoid);
+            avoid = getArguments().getString(AVOID);
             locationFrom = Helper.getLocationFromAddress(from, getActivity());
             locationTo = Helper.getLocationFromAddress(to, getActivity());
         }
@@ -92,8 +96,9 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.getUiSettings().setIndoorLevelPickerEnabled(true);
-        map.getUiSettings().setMapToolbarEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(false);
+        map.getUiSettings().setAllGesturesEnabled(true);
+        map.getUiSettings().setRotateGesturesEnabled(false);
     }
 
     public void setMarker(LatLng point){
@@ -102,35 +107,41 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
             map.clear();
         }
         markerPoints.add(point);
-        MarkerOptions options = new MarkerOptions();
-        options.position(point);
-        if (markerPoints.size() == 1) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        } else if (markerPoints.size() == 2) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-        map.addMarker(options);
         if (markerPoints.size() >= 2) {
             LatLng origin = markerPoints.get(0);
             LatLng dest = markerPoints.get(1);
             //driving walking bicycling transit
             //avoid=tolls avoid=highways avoid=ferries
-            String url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
+            url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
             DownloadTask downloadTask = new DownloadTask(map);
             map = downloadTask.getMap();
             downloadTask.execute(url);
         }
+        MarkerOptions options = new MarkerOptions();
+        options.position(point);
+        if (markerPoints.size() == 1) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            options.title("begin");
+            options.visible(true);
+        } else if (markerPoints.size() == 2) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            if(DirectionsJSONParser.distance!= null && DirectionsJSONParser.distance!= null) options.title("einde, afstand: " + DirectionsJSONParser.distance + " Tijd: " + DirectionsJSONParser.duration);
+            else options.title("einde");
+            options.visible(true);
+        }
+        map.addMarker(options);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_google_map, container, false);
+        View v = inflater.inflate(R.layout.fragment_google_map, container, false);
         initMap();
         if(mode == MapOptie.Optie.NORMAL.getName()) showNormal();
         if(mode == MapOptie.Optie.SATELLITE.getName()) showSatelite();
         if(mode == MapOptie.Optie.TERRAIN.getName()) showTerrain();
+
         return v;
     }
 
@@ -146,7 +157,6 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, map.getCameraPosition().zoom);
         map.animateCamera(update);
-
     }
 
     public void showNormal() {
@@ -154,5 +164,24 @@ public class GoogleMapFragment extends Fragment {//implements OnMapReadyCallback
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, map.getCameraPosition().zoom);
         map.animateCamera(update);
+    }
+
+    public static GoogleMapFragment newInstance(String from, String to, String modes, String avoid, String mapOptie){
+        GoogleMapFragment fragment = new GoogleMapFragment();
+        Bundle args = new Bundle();
+        args.putString(GoogleMapFragment.FROM, from);
+        args.putString(GoogleMapFragment.TO, to);
+        args.putString(GoogleMapFragment.TRANSITMODE, modes);
+        args.putString(GoogleMapFragment.AVOID, avoid);
+        args.putString(GoogleMapFragment.MODE, mapOptie);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MapFragment f = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        if (f != null) getFragmentManager().beginTransaction().remove(f).commit();
     }
 }
