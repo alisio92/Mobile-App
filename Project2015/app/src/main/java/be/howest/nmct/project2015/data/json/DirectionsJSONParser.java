@@ -17,24 +17,24 @@ import be.howest.nmct.project2015.data.helper.Step;
 public class DirectionsJSONParser {
 
     public static List<Step> polylines;
-    public static String distance;
-    public static String duration;
-    public static String from;
-    public static String to;
+    public String distance;
+    public String duration;
+    public String from;
+    public String to;
 
-    public static String getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public static String getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public static String getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public static String getTo() {
+    public String getTo() {
         return to;
     }
 

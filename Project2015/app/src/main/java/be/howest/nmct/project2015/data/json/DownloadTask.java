@@ -15,6 +15,7 @@ import java.net.URL;
 public class DownloadTask extends AsyncTask<String, Void, String> {
 
     private GoogleMap map;
+    private ParserTask parserTask;
 
     public GoogleMap getMap() {
         return map;
@@ -22,6 +23,10 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
 
     public DownloadTask(GoogleMap map){
         this.map = map;
+    }
+
+    public ParserTask getParserTask() {
+        return parserTask;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        ParserTask parserTask = new ParserTask(map);
+        parserTask = new ParserTask(map);
         map = parserTask.getMap();
         parserTask.execute(result);
     }

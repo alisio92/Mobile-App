@@ -20,6 +20,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import be.howest.nmct.project2015.data.Contract;
+import be.howest.nmct.project2015.data.helper.Helper;
 import be.howest.nmct.project2015.data.json.DirectionsJSONParser;
 import be.howest.nmct.project2015.data.loader.DetailLoader;
 
@@ -30,6 +31,16 @@ public class DetailFragment extends ListFragment implements LoaderManager.Loader
     private TextView fromView;
     private TextView toView;
     DetailAdapter detailAdapter;
+
+    private String distance;
+    private String duration;
+    private String from;
+    private String destination;
+
+    public static final String DISTANCE = "be.howest.nmct.NEW_DISTANCE";;
+    public static final String DURATION = "be.howest.nmct.NEW_DURATION";;
+    public static final String FROM = "be.howest.nmct.NEW_FROM";;
+    public static final String TO = "be.howest.nmct.NEW_TO";;
 
     static final String[] mColumnNames = new String[]{
             Contract.MapColumns.COLUMN_INNER_DISTANCE,
@@ -43,13 +54,23 @@ public class DetailFragment extends ListFragment implements LoaderManager.Loader
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
         initVariables(v);
+
+        distance = getArguments().getString(DISTANCE);
+        duration = getArguments().getString(DURATION);
+        from = getArguments().getString(FROM);
+        destination = getArguments().getString(TO);
         setValues();
+
         return v;
     }
 
-    public static DetailFragment newInstance(){
+    public static DetailFragment newInstance(String distance, String duration, String from, String to){
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
+        args.putString(DetailFragment.DISTANCE, distance);
+        args.putString(DetailFragment.DURATION, duration);
+        args.putString(DetailFragment.FROM, from);
+        args.putString(DetailFragment.TO, to);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +83,10 @@ public class DetailFragment extends ListFragment implements LoaderManager.Loader
     }
 
     public void setValues() {
-        distanceView.setText(DirectionsJSONParser.getDistance());
-        timeView.setText(DirectionsJSONParser.getDuration());
-        fromView.setText(DirectionsJSONParser.getFrom());
-        toView.setText(DirectionsJSONParser.getTo());
+        distanceView.setText(distance);
+        timeView.setText(duration);
+        fromView.setText(from);
+        toView.setText(destination);
     }
 
     @Override

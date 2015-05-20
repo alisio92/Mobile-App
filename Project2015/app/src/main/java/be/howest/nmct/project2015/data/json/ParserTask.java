@@ -19,6 +19,7 @@ import be.howest.nmct.project2015.data.json.DirectionsJSONParser;
 public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
 
     private GoogleMap map;
+    private DirectionsJSONParser parser;
 
     public GoogleMap getMap() {
         return map;
@@ -26,6 +27,10 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
 
     public ParserTask(GoogleMap map){
         this.map = map;
+    }
+
+    public DirectionsJSONParser getParser() {
+        return parser;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
 
         try{
             jObject = new JSONObject(jsonData[0]);
-            DirectionsJSONParser parser = new DirectionsJSONParser();
+            parser = new DirectionsJSONParser();
 
             // Starts parsing data
             routes = parser.parse(jObject);

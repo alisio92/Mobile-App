@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import be.howest.nmct.project2015.data.helper.MapOptie;
 import be.howest.nmct.project2015.data.loader.MapLoader;
 
-public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, MapOptionsFragment.OnMapOptionsListener, LocationListener {
+public class MainActivity extends ActionBarActivity implements SettingsFragment.OnSettingsListener, MapOptionsFragment.OnMapOptionsListener, LocationListener, GoogleMapFragment.OnGoogleMapListener {
 
     private LocationManager locationManager;
     public static LatLng LOCATION_Default = new LatLng(50.8246827, 3.251409599999988);
@@ -35,6 +35,11 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     private CharSequence mTitle;
     private View mFrag;
     private String mapOptie = "";
+
+    private String distance;
+    private String duration;
+    private String from;
+    private String to;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,17 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     public void onSettingsSelected(String from, String to, String modes, String avoid) {
         if(from!= null) showMap(from, to, modes, avoid);
         else showDetail();
+    }
+
+    public void onGoogleMapSelected(String distance, String duration, String from, String to) {
+        this.distance = distance;
+        this.duration = duration;
+        this.from = from;
+        this.to = to;
+
+        SettingsFragment frag = (SettingsFragment) getFragmentManager().findFragmentByTag("settings");
+        frag.enableDisableControls();
+        showSettings();
     }
 
     public void onMapOptionsSelected(String optie) {
@@ -83,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
     }
 
     public void showDetail(){
-        DetailFragment newFragment = DetailFragment.newInstance();
+        DetailFragment newFragment = DetailFragment.newInstance(distance, duration, from, to);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.container, newFragment, "detail");
         transaction.addToBackStack(null);
@@ -186,8 +202,8 @@ public class MainActivity extends ActionBarActivity implements SettingsFragment.
 
     @Override
     public void onBackPressed() {
-        SettingsFragment frag = (SettingsFragment) getFragmentManager().findFragmentByTag("settings");
-        frag.enableDisableControls();
-        showSettings();
+        GoogleMapFragment frag = (GoogleMapFragment) getFragmentManager().findFragmentByTag("googlemap");
+        if(frag!= null) frag.callCalback();
+        else showSettings();
     }
 }

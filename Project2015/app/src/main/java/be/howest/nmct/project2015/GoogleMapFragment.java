@@ -1,5 +1,6 @@
 package be.howest.nmct.project2015;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
@@ -25,7 +26,8 @@ public class GoogleMapFragment extends Fragment {
 
     private GoogleMap map;
     private MapLoader loader;
-    ArrayList<LatLng> markerPoints;
+    private ArrayList<LatLng> markerPoints;
+    private DownloadTask downloadTask;
     public static final String FROM = "be.howest.nmct.NEW_FROM";
     public static final String TO = "be.howest.nmct.NEW_TO";
     public static final String TRANSITMODE = "be.howest.nmct.NEW_TRANSITMODE";;
@@ -37,6 +39,7 @@ public class GoogleMapFragment extends Fragment {
     private String avoid = "";
     private String mode = "";
     private String url;
+    private OnGoogleMapListener mGoogleMapCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,7 @@ public class GoogleMapFragment extends Fragment {
             //driving walking bicycling transit
             //avoid=tolls avoid=highways avoid=ferries
             url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
-            DownloadTask downloadTask = new DownloadTask(map);
+            downloadTask = new DownloadTask(map);
             map = downloadTask.getMap();
             downloadTask.execute(url);
         }
@@ -125,8 +128,7 @@ public class GoogleMapFragment extends Fragment {
             options.visible(true);
         } else if (markerPoints.size() == 2) {
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            if(DirectionsJSONParser.distance!= null && DirectionsJSONParser.distance!= null) options.title("einde, afstand: " + DirectionsJSONParser.distance + " Tijd: " + DirectionsJSONParser.duration);
-            else options.title("einde");
+            options.title("einde");
             options.visible(true);
         }
         map.addMarker(options);
@@ -183,5 +185,24 @@ public class GoogleMapFragment extends Fragment {
         super.onDestroyView();
         MapFragment f = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         if (f != null) getFragmentManager().beginTransaction().remove(f).commit();
+    }
+
+    public interface OnGoogleMapListener {
+        public void onGoogleMapSelected(String distance, String duration, String from, String to);
+    }
+
+    public void callCalback(){
+        DirectionsJSONParser parser = downloadTask.getParserTask().getParser();
+        mGoogleMapCallback.onGoogleMapSelected(parser.distance, parser.duration, parser.from, parser.to);
+    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mGoogleMapCallback = (OnGoogleMapListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 }

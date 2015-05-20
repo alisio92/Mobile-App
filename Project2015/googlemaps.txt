@@ -1,2 +1,7 @@
 bugs
 crash by restarten map fragment
+
+thema
+text format
+drawer keuze
+text, map
