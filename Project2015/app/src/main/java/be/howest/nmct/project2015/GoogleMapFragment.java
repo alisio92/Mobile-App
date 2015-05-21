@@ -39,6 +39,9 @@ public class GoogleMapFragment extends Fragment {
     private String avoid = "";
     private String mode = "";
     private String url;
+    private String from = "";
+    private String to = "";
+    private Boolean different = false;
     private OnGoogleMapListener mGoogleMapCallback;
 
     @Override
@@ -50,6 +53,8 @@ public class GoogleMapFragment extends Fragment {
             mode = getArguments().getString(MODE);
             trannsitMode = getArguments().getString(TRANSITMODE);
             avoid = getArguments().getString(AVOID);
+            this.from = from;
+            this.to = to;
             locationFrom = Helper.getLocationFromAddress(from, getActivity());
             locationTo = Helper.getLocationFromAddress(to, getActivity());
         }
@@ -106,6 +111,8 @@ public class GoogleMapFragment extends Fragment {
 
     public void setMarker(LatLng point){
         if (markerPoints.size() > 1) {
+            if(locationFrom!= point) different = true;
+            else different = false;
             markerPoints.clear();
             map.clear();
         }
@@ -113,6 +120,10 @@ public class GoogleMapFragment extends Fragment {
         if (markerPoints.size() >= 2) {
             LatLng origin = markerPoints.get(0);
             LatLng dest = markerPoints.get(1);
+            if(locationFrom!= origin || locationTo!=dest) different = true;
+            else different = false;
+            locationFrom = origin;
+            locationTo = dest;
             //driving walking bicycling transit
             //avoid=tolls avoid=highways avoid=ferries
             url = Helper.getDirectionsUrl(origin, dest, trannsitMode, avoid);
@@ -124,11 +135,15 @@ public class GoogleMapFragment extends Fragment {
         options.position(point);
         if (markerPoints.size() == 1) {
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            options.title("begin");
+            if(!different) options.title("start(" + from + ")");
+            else options.title("start");
+            options.snippet(locationFrom.toString());
             options.visible(true);
         } else if (markerPoints.size() == 2) {
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            options.title("einde");
+            if(!different) options.title("einde(" + to + ")");
+            else options.title("einde");
+            options.snippet(locationTo.toString());
             options.visible(true);
         }
         map.addMarker(options);
